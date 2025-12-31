@@ -23,13 +23,26 @@ export type Persona = {
 type State = {
   personas: Persona[];
   addPersona: (persona: Persona) => void;
-  addMovimiento: (personaId: string, movimiento: Movimiento) => void;
   updatePersona: (id: string, data: Partial<Persona>) => void;
+
+  addMovimiento: (personaId: string, movimiento: Movimiento) => void;
+  updateMovimiento: (
+    personaId: string,
+    movimientoId: string,
+    data: Partial<Movimiento>
+  ) => void;
+  deleteMovimiento: (personaId: string, movimientoId: string) => void;
 };
+
+const calcularSaldo = (movimientos: Movimiento[]) =>
+  movimientos.reduce(
+    (acc, m) => (m.tipo === "ingreso" ? acc + m.monto : acc - m.monto),
+    0
+  );
 
 export const usePersonsStore = create<State>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       personas: [],
 
       addPersona: (persona) =>
@@ -37,29 +50,60 @@ export const usePersonsStore = create<State>()(
           personas: [...state.personas, persona],
         })),
 
-      addMovimiento: (personaId, movimiento) =>
-        set((state) => ({
-          personas: state.personas.map((p) => {
-            if (p.id !== personaId) return p;
-
-            const nuevoSaldo =
-              movimiento.tipo === "ingreso"
-                ? p.saldo + movimiento.monto
-                : p.saldo - movimiento.monto;
-
-            return {
-              ...p,
-              saldo: nuevoSaldo,
-              movimientos: [...p.movimientos, movimiento],
-            };
-          }),
-        })),
-
       updatePersona: (id, data) =>
         set((state) => ({
           personas: state.personas.map((p) =>
             p.id === id ? { ...p, ...data } : p
           ),
+        })),
+
+      addMovimiento: (personaId, movimiento) =>
+        set((state) => ({
+          personas: state.personas.map((p) => {
+            if (p.id !== personaId) return p;
+
+            const movimientos = [...p.movimientos, movimiento];
+
+            return {
+              ...p,
+              movimientos,
+              saldo: calcularSaldo(movimientos),
+            };
+          }),
+        })),
+
+      updateMovimiento: (personaId, movimientoId, data) =>
+        set((state) => ({
+          personas: state.personas.map((p) => {
+            if (p.id !== personaId) return p;
+
+            const movimientos = p.movimientos.map((m) =>
+              m.id === movimientoId ? { ...m, ...data } : m
+            );
+
+            return {
+              ...p,
+              movimientos,
+              saldo: calcularSaldo(movimientos),
+            };
+          }),
+        })),
+
+      deleteMovimiento: (personaId, movimientoId) =>
+        set((state) => ({
+          personas: state.personas.map((p) => {
+            if (p.id !== personaId) return p;
+
+            const movimientos = p.movimientos.filter(
+              (m) => m.id !== movimientoId
+            );
+
+            return {
+              ...p,
+              movimientos,
+              saldo: calcularSaldo(movimientos),
+            };
+          }),
         })),
     }),
     {

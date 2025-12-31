@@ -39,7 +39,10 @@ export default function PersonaDetalle() {
           headerRight: () => (
             <Pressable
               onPress={() =>
-                router.push(`/movimientos/nuevo?personaId=${persona.id}`)
+                router.push({
+                  pathname: "/movimientos/nuevo",
+                  params: { personaId: persona.id },
+                })
               }
             >
               <MaterialCommunityIcons name="transfer" size={30} color="black" />
@@ -66,7 +69,13 @@ export default function PersonaDetalle() {
           keyExtractor={(item) => item.id}
           ListEmptyComponent={<Text>No hay movimientos</Text>}
           renderItem={({ item }) => (
-            <View
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: "/movimientos/[id]",
+                  params: { id: item.id, personaId: persona.id },
+                })
+              }
               style={{
                 padding: 12,
                 borderBottomWidth: 1,
@@ -78,7 +87,7 @@ export default function PersonaDetalle() {
               </Text>
               <Text>{item.descripcion}</Text>
               <Text>{new Date(item.fecha).toLocaleDateString()}</Text>
-            </View>
+            </Pressable>
           )}
         />
       </View>
