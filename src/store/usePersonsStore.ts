@@ -24,6 +24,7 @@ type State = {
   personas: Persona[];
   addPersona: (persona: Persona) => void;
   updatePersona: (id: string, data: Partial<Persona>) => void;
+  deletePersona: (id: string) => void;
 
   addMovimiento: (personaId: string, movimiento: Movimiento) => void;
   updateMovimiento: (
@@ -55,6 +56,11 @@ export const usePersonsStore = create<State>()(
           personas: state.personas.map((p) =>
             p.id === id ? { ...p, ...data } : p
           ),
+        })),
+
+      deletePersona: (id) =>
+        set((state) => ({
+          personas: state.personas.filter((p) => p.id !== id),
         })),
 
       addMovimiento: (personaId, movimiento) =>

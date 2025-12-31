@@ -1,12 +1,14 @@
 import { usePersonsStore } from "@/src/store/usePersonsStore";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, Text, TextInput, View } from "react-native";
 
 export default function EditarPersona() {
   const { id } = useLocalSearchParams<{ id: string }>();
+
   const persona = usePersonsStore((s) => s.personas.find((p) => p.id === id));
   const updatePersona = usePersonsStore((s) => s.updatePersona);
+  const deletePersona = usePersonsStore((s) => s.deletePersona);
 
   const [nombre, setNombre] = useState(persona?.nombre ?? "");
   const [color, setColor] = useState(persona?.color ?? "");
@@ -22,6 +24,24 @@ export default function EditarPersona() {
     });
 
     router.back();
+  };
+
+  const confirmarEliminar = () => {
+    Alert.alert(
+      "Eliminar persona",
+      "Se eliminarán todos los movimientos asociados. ¿Deseas continuar?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: () => {
+            deletePersona(persona.id);
+            router.replace("/");
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -49,20 +69,39 @@ export default function EditarPersona() {
           style={{
             borderWidth: 1,
             padding: 12,
-            marginBottom: 12,
+            marginBottom: 24,
           }}
         />
 
+        {/* Guardar */}
         <Pressable
           onPress={guardar}
           style={{
             padding: 16,
             backgroundColor: "#000",
-            borderRadius: 12,
+            marginBottom: 24, 
           }}
         >
           <Text style={{ color: "#fff", textAlign: "center" }}>
             Guardar cambios
+          </Text>
+        </Pressable>
+
+        {/* Eliminar */}
+        <Pressable
+          onPress={confirmarEliminar}
+          style={{
+            padding: 16,
+            backgroundColor: "#b00020",
+          }}
+        >
+          <Text
+            style={{
+              color: "#fff",
+              textAlign: "center",
+            }}
+          >
+            Eliminar persona
           </Text>
         </Pressable>
       </View>
