@@ -22,7 +22,20 @@ export default function PersonaDetalle() {
     <>
       <Stack.Screen
         options={{
-          title: persona.nombre,
+          headerTitle: () => (
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ fontSize: 18, fontWeight: "600", marginRight: 8 }}>
+                {persona.nombre}
+              </Text>
+
+              <Pressable
+                onPress={() => router.push(`/personas/${persona.id}/editar`)}
+              >
+                <MaterialCommunityIcons name="pencil" size={18} color="black" />
+              </Pressable>
+            </View>
+          ),
+
           headerRight: () => (
             <Pressable
               onPress={() =>
