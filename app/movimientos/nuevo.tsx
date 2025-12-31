@@ -1,4 +1,5 @@
 import { usePersonsStore } from "@/src/store/usePersonsStore";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Crypto from "expo-crypto";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -12,15 +13,17 @@ export default function NuevoMovimiento() {
   const [monto, setMonto] = useState("");
   const [descripcion, setDescripcion] = useState("");
 
+  const [fecha, setFecha] = useState<Date>(new Date());
+  const [mostrarPicker, setMostrarPicker] = useState(false);
+
   const guardar = () => {
     addMovimiento(personaId!, {
       id: Crypto.randomUUID(),
       tipo,
       monto: Number(monto),
       descripcion,
-      fecha: new Date().toISOString(),
+      fecha: fecha.toISOString(),
     });
-
     router.back();
   };
 
@@ -28,6 +31,7 @@ export default function NuevoMovimiento() {
     <View style={{ padding: 16 }}>
       <Text style={{ fontSize: 22, marginBottom: 16 }}>Nuevo movimiento</Text>
 
+      {/* Tipo */}
       <View style={{ flexDirection: "row", marginBottom: 16 }}>
         <Pressable
           onPress={() => setTipo("ingreso")}
@@ -66,6 +70,7 @@ export default function NuevoMovimiento() {
         </Pressable>
       </View>
 
+      {/* Monto */}
       <TextInput
         placeholder="Monto"
         keyboardType="numeric"
@@ -74,12 +79,39 @@ export default function NuevoMovimiento() {
         style={{ borderWidth: 1, padding: 12, marginBottom: 12 }}
       />
 
+      {/* Descripción */}
       <TextInput
         placeholder="Descripción"
         value={descripcion}
         onChangeText={setDescripcion}
         style={{ borderWidth: 1, padding: 12, marginBottom: 12 }}
       />
+
+      {/* Fecha */}
+      <Pressable
+        onPress={() => setMostrarPicker(true)}
+        style={{
+          padding: 12,
+          borderWidth: 1,
+          marginBottom: 16,
+        }}
+      >
+        <Text>Fecha: {fecha.toLocaleDateString()}</Text>
+      </Pressable>
+
+      {mostrarPicker && (
+        <DateTimePicker
+          value={fecha}
+          mode="date"
+          display="default"
+          onChange={(_, selectedDate) => {
+            setMostrarPicker(false);
+            if (selectedDate) {
+              setFecha(selectedDate);
+            }
+          }}
+        />
+      )}
 
       <Pressable
         onPress={guardar}
