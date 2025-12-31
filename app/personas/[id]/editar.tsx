@@ -49,7 +49,9 @@ export default function EditarPersona() {
       <Stack.Screen options={{ title: "Editar persona" }} />
 
       <View style={{ padding: 16 }}>
-        <Text style={{ fontSize: 22, marginBottom: 16 }}>Editar persona</Text>
+        <Text style={{ fontSize: 22, marginBottom: 16, color: "#fff" }}>
+          Editar persona
+        </Text>
 
         <TextInput
           value={nombre}
@@ -59,6 +61,8 @@ export default function EditarPersona() {
             borderWidth: 1,
             padding: 12,
             marginBottom: 12,
+            borderColor: "#ffffffff",
+            color: "#ffffffff",
           }}
         />
 
@@ -70,6 +74,8 @@ export default function EditarPersona() {
             borderWidth: 1,
             padding: 12,
             marginBottom: 24,
+            borderColor: "#ffffffff",
+            color: "#ffffffff",
           }}
         />
 
@@ -78,11 +84,11 @@ export default function EditarPersona() {
           onPress={guardar}
           style={{
             padding: 16,
-            backgroundColor: "#000",
-            marginBottom: 24, 
+            backgroundColor: "#ffffffff",
+            marginBottom: 24,
           }}
         >
-          <Text style={{ color: "#fff", textAlign: "center" }}>
+          <Text style={{ color: "#000000ff", textAlign: "center" }}>
             Guardar cambios
           </Text>
         </Pressable>
@@ -92,7 +98,7 @@ export default function EditarPersona() {
           onPress={confirmarEliminar}
           style={{
             padding: 16,
-            backgroundColor: "#b00020",
+            backgroundColor: "#df2440ff",
           }}
         >
           <Text

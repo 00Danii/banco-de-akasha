@@ -62,7 +62,9 @@ export default function EditarMovimiento() {
 
   return (
     <View style={{ padding: 16 }}>
-      <Text style={{ fontSize: 22, marginBottom: 16 }}>Editar movimiento</Text>
+      <Text style={{ fontSize: 22, marginBottom: 16, color: "#fff" }}>
+        Editar movimiento
+      </Text>
 
       {/* Tipo */}
       <View style={{ flexDirection: "row", marginBottom: 16 }}>
@@ -73,12 +75,12 @@ export default function EditarMovimiento() {
             style={{
               flex: 1,
               padding: 12,
-              backgroundColor: tipo === t ? "#000" : "#ddd",
+              backgroundColor: tipo === t ? "#ffffffff" : "#212121ff",
             }}
           >
             <Text
               style={{
-                color: tipo === t ? "#fff" : "#000",
+                color: tipo === t ? "#000000ff" : "#ffffffff",
                 textAlign: "center",
               }}
             >
@@ -93,21 +95,40 @@ export default function EditarMovimiento() {
         keyboardType="numeric"
         value={monto}
         onChangeText={setMonto}
-        style={{ borderWidth: 1, padding: 12, marginBottom: 12 }}
+        style={{
+          borderWidth: 1,
+          padding: 12,
+          marginBottom: 12,
+          borderColor: "#ffffffff",
+          color: "#ffffffff",
+        }}
       />
 
       <TextInput
         placeholder="Descripción"
         value={descripcion}
         onChangeText={setDescripcion}
-        style={{ borderWidth: 1, padding: 12, marginBottom: 12 }}
+        style={{
+          borderWidth: 1,
+          padding: 12,
+          marginBottom: 12,
+          borderColor: "#fff",
+          color: "#fff",
+        }}
       />
 
       <Pressable
         onPress={() => setShowPicker(true)}
-        style={{ borderWidth: 1, padding: 12, marginBottom: 16 }}
+        style={{
+          borderWidth: 1,
+          padding: 12,
+          marginBottom: 16,
+          borderColor: "#fff",
+        }}
       >
-        <Text>Fecha: {fecha.toLocaleDateString()}</Text>
+        <Text style={{ color: "#fff" }}>
+          Fecha: {fecha.toLocaleDateString()}
+        </Text>
       </Pressable>
 
       {showPicker && (
@@ -123,9 +144,9 @@ export default function EditarMovimiento() {
 
       <Pressable
         onPress={guardar}
-        style={{ padding: 16, backgroundColor: "#000", marginBottom: 12 }}
+        style={{ padding: 16, backgroundColor: "#ffffffff", marginBottom: 12 }}
       >
-        <Text style={{ color: "#fff", textAlign: "center" }}>
+        <Text style={{ color: "#000000ff", textAlign: "center" }}>
           Guardar cambios
         </Text>
       </Pressable>
@@ -134,7 +155,7 @@ export default function EditarMovimiento() {
         onPress={confirmarEliminar}
         style={{
           padding: 16,
-          backgroundColor: "#b00020",
+          backgroundColor: "#df2440ff",
         }}
       >
         <Text style={{ color: "#fff", textAlign: "center" }}>

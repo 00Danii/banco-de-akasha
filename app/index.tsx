@@ -13,7 +13,7 @@ export default function Home() {
           title: "Personas",
           headerRight: () => (
             <Pressable onPress={() => router.push("/personas/nueva")}>
-              <Ionicons name="person-add" size={30} />
+              <Ionicons name="person-add" size={30} style={{ color: "#fff" }} />
             </Pressable>
           ),
         }}
@@ -23,7 +23,9 @@ export default function Home() {
         <FlatList
           data={personas}
           keyExtractor={(item) => item.id}
-          ListEmptyComponent={<Text>No hay personas todavía</Text>}
+          ListEmptyComponent={
+            <Text style={{ color: "#fff" }}>No hay personas todavía</Text>
+          }
           renderItem={({ item }) => (
             <Pressable
               onPress={() => router.push(`/personas/${item.id}`)}

@@ -24,13 +24,21 @@ export default function NuevaPersona() {
 
   return (
     <View style={{ padding: 16 }}>
-      <Text style={{ fontSize: 22, marginBottom: 16 }}>Nueva Persona</Text>
+      <Text style={{ fontSize: 22, marginBottom: 16, color: "#fff" }}>
+        Nueva Persona
+      </Text>
 
       <TextInput
-        placeholder="Nombre"
+        placeholder="Nombre de la persona"
         value={nombre}
         onChangeText={setNombre}
-        style={{ borderWidth: 1, padding: 12, marginBottom: 12 }}
+        style={{
+          borderWidth: 1,
+          borderColor: "#fff",
+          padding: 12,
+          marginBottom: 12,
+          color: "#fff",
+        }}
       />
 
       <TextInput
@@ -38,14 +46,20 @@ export default function NuevaPersona() {
         keyboardType="numeric"
         value={saldo}
         onChangeText={setSaldo}
-        style={{ borderWidth: 1, padding: 12, marginBottom: 12 }}
+        style={{
+          borderWidth: 1,
+          padding: 12,
+          marginBottom: 12,
+          borderColor: "#fff",
+          color: "#fff",
+        }}
       />
 
       <Pressable
         onPress={crear}
-        style={{ padding: 16, backgroundColor: "#000" }}
+        style={{ padding: 16, backgroundColor: "#ffffffff" }}
       >
-        <Text style={{ color: "#fff", textAlign: "center" }}>Guardar</Text>
+        <Text style={{ color: "#000000ff", textAlign: "center" }}>Guardar</Text>
       </Pressable>
     </View>
   );

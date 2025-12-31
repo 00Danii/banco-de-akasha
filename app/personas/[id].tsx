@@ -24,14 +24,21 @@ export default function PersonaDetalle() {
         options={{
           headerTitle: () => (
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={{ fontSize: 18, fontWeight: "600", marginRight: 8 }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "600",
+                  marginRight: 8,
+                  color: "#ffffffff",
+                }}
+              >
                 {persona.nombre}
               </Text>
 
               <Pressable
                 onPress={() => router.push(`/personas/${persona.id}/editar`)}
               >
-                <MaterialCommunityIcons name="pencil" size={18} color="black" />
+                <MaterialCommunityIcons name="pencil" size={18} color="white" />
               </Pressable>
             </View>
           ),
@@ -45,7 +52,7 @@ export default function PersonaDetalle() {
                 })
               }
             >
-              <MaterialCommunityIcons name="transfer" size={30} color="black" />
+              <MaterialCommunityIcons name="transfer" size={30} color="white" />
             </Pressable>
           ),
         }}
@@ -67,7 +74,9 @@ export default function PersonaDetalle() {
         <FlatList
           data={movimientosOrdenados}
           keyExtractor={(item) => item.id}
-          ListEmptyComponent={<Text>No hay movimientos</Text>}
+          ListEmptyComponent={
+            <Text style={{ color: "#fff" }}>No hay movimientos</Text>
+          }
           renderItem={({ item }) => (
             <Pressable
               onPress={() =>
@@ -79,14 +88,16 @@ export default function PersonaDetalle() {
               style={{
                 padding: 12,
                 borderBottomWidth: 1,
-                borderColor: "#ddd",
+                borderColor: "#ffffffff",
               }}
             >
-              <Text>
+              <Text style={{ color: "#fff" }}>
                 {item.tipo === "ingreso" ? "➕" : "➖"} ${item.monto}
               </Text>
-              <Text>{item.descripcion}</Text>
-              <Text>{new Date(item.fecha).toLocaleDateString()}</Text>
+              <Text style={{ color: "#fff" }}>{item.descripcion}</Text>
+              <Text style={{ color: "#fff" }}>
+                {new Date(item.fecha).toLocaleDateString()}
+              </Text>
             </Pressable>
           )}
         />

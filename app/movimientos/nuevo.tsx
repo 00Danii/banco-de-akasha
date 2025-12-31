@@ -29,7 +29,9 @@ export default function NuevoMovimiento() {
 
   return (
     <View style={{ padding: 16 }}>
-      <Text style={{ fontSize: 22, marginBottom: 16 }}>Nuevo movimiento</Text>
+      <Text style={{ fontSize: 22, marginBottom: 16, color: "#fff" }}>
+        Nuevo movimiento
+      </Text>
 
       {/* Tipo */}
       <View style={{ flexDirection: "row", marginBottom: 16 }}>
@@ -38,12 +40,12 @@ export default function NuevoMovimiento() {
           style={{
             flex: 1,
             padding: 12,
-            backgroundColor: tipo === "ingreso" ? "#000" : "#ddd",
+            backgroundColor: tipo === "ingreso" ? "#ffffffff" : "#212121ff",
           }}
         >
           <Text
             style={{
-              color: tipo === "ingreso" ? "#fff" : "#000",
+              color: tipo === "ingreso" ? "#000000ff" : "#ffffffff",
               textAlign: "center",
             }}
           >
@@ -56,12 +58,12 @@ export default function NuevoMovimiento() {
           style={{
             flex: 1,
             padding: 12,
-            backgroundColor: tipo === "retiro" ? "#000" : "#ddd",
+            backgroundColor: tipo === "retiro" ? "#ffffffff" : "#212121ff",
           }}
         >
           <Text
             style={{
-              color: tipo === "retiro" ? "#fff" : "#000",
+              color: tipo === "retiro" ? "#000000ff" : "#ffffffff",
               textAlign: "center",
             }}
           >
@@ -76,7 +78,13 @@ export default function NuevoMovimiento() {
         keyboardType="numeric"
         value={monto}
         onChangeText={setMonto}
-        style={{ borderWidth: 1, padding: 12, marginBottom: 12 }}
+        style={{
+          borderWidth: 1,
+          padding: 12,
+          borderColor: "#ffffffff",
+          marginBottom: 12,
+          color: "#ffffffff",
+        }}
       />
 
       {/* Descripción */}
@@ -84,7 +92,13 @@ export default function NuevoMovimiento() {
         placeholder="Descripción"
         value={descripcion}
         onChangeText={setDescripcion}
-        style={{ borderWidth: 1, padding: 12, marginBottom: 12 }}
+        style={{
+          borderWidth: 1,
+          padding: 12,
+          marginBottom: 12,
+          color: "#fff",
+          borderColor: "#fff",
+        }}
       />
 
       {/* Fecha */}
@@ -94,9 +108,12 @@ export default function NuevoMovimiento() {
           padding: 12,
           borderWidth: 1,
           marginBottom: 16,
+          borderColor: "#fff",
         }}
       >
-        <Text>Fecha: {fecha.toLocaleDateString()}</Text>
+        <Text style={{ color: "#fff" }}>
+          Fecha: {fecha.toLocaleDateString()}
+        </Text>
       </Pressable>
 
       {mostrarPicker && (
@@ -115,9 +132,9 @@ export default function NuevoMovimiento() {
 
       <Pressable
         onPress={guardar}
-        style={{ padding: 16, backgroundColor: "#000" }}
+        style={{ padding: 16, backgroundColor: "#ffffffff" }}
       >
-        <Text style={{ color: "#fff", textAlign: "center" }}>
+        <Text style={{ color: "#000000ff", textAlign: "center" }}>
           Guardar movimiento
         </Text>
       </Pressable>
