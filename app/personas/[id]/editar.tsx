@@ -1,3 +1,4 @@
+import { ColorPickerField } from "@/src/components/ColorPickerField";
 import { usePersonsStore } from "@/src/store/usePersonsStore";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -66,26 +67,15 @@ export default function EditarPersona() {
           }}
         />
 
-        <TextInput
-          value={color}
-          onChangeText={setColor}
-          placeholder="Color (#hex)"
-          style={{
-            borderWidth: 1,
-            padding: 12,
-            marginBottom: 24,
-            borderColor: "#ffffffff",
-            color: "#ffffffff",
-          }}
-        />
+        <ColorPickerField value={color} onChange={setColor} />
 
         {/* Guardar */}
         <Pressable
           onPress={guardar}
           style={{
             padding: 16,
-            backgroundColor: "#ffffffff",
-            marginBottom: 24,
+            backgroundColor: color,
+            marginTop: 320,
           }}
         >
           <Text style={{ color: "#000000ff", textAlign: "center" }}>
@@ -99,6 +89,7 @@ export default function EditarPersona() {
           style={{
             padding: 16,
             backgroundColor: "#df2440ff",
+            marginTop: 12,
           }}
         >
           <Text

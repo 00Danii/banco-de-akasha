@@ -1,3 +1,4 @@
+import { ColorPickerField } from "@/src/components/ColorPickerField";
 import { usePersonsStore } from "@/src/store/usePersonsStore";
 import * as Crypto from "expo-crypto";
 import { router } from "expo-router";
@@ -9,13 +10,14 @@ export default function NuevaPersona() {
 
   const [nombre, setNombre] = useState("");
   const [saldo, setSaldo] = useState("0");
+  const [color, setColor] = useState("#FFF");
 
   const crear = () => {
     addPersona({
       id: Crypto.randomUUID(),
       nombre,
       saldo: Number(saldo),
-      color: "#E0E0E0",
+      color: color,
       movimientos: [],
     });
 
@@ -55,9 +57,15 @@ export default function NuevaPersona() {
         }}
       />
 
+      <ColorPickerField value={color} onChange={setColor} />
+
       <Pressable
         onPress={crear}
-        style={{ padding: 16, backgroundColor: "#ffffffff" }}
+        style={{
+          padding: 16,
+          backgroundColor: color,
+          marginTop: 320,
+        }}
       >
         <Text style={{ color: "#000000ff", textAlign: "center" }}>Guardar</Text>
       </Pressable>
