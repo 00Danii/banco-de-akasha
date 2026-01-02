@@ -17,6 +17,7 @@ export type Persona = {
   color: string;
   fotoUri?: string;
   saldo: number;
+  saldoInicial?: number;
   movimientos: Movimiento[];
 };
 
@@ -35,11 +36,14 @@ type State = {
   deleteMovimiento: (personaId: string, movimientoId: string) => void;
 };
 
-const calcularSaldo = (movimientos: Movimiento[]) =>
+const sumMovimientos = (movimientos: Movimiento[]) =>
   movimientos.reduce(
     (acc, m) => (m.tipo === "ingreso" ? acc + m.monto : acc - m.monto),
     0
   );
+
+const calcularSaldo = (movimientos: Movimiento[], base = 0) =>
+  base + sumMovimientos(movimientos);
 
 export const usePersonsStore = create<State>()(
   persist(
@@ -48,7 +52,15 @@ export const usePersonsStore = create<State>()(
 
       addPersona: (persona) =>
         set((state) => ({
-          personas: [...state.personas, persona],
+          personas: [
+            ...state.personas,
+            {
+              ...persona,
+              saldoInicial: persona.saldo ?? 0,
+              saldo: persona.saldo ?? 0,
+              movimientos: persona.movimientos ?? [],
+            },
+          ],
         })),
 
       updatePersona: (id, data) =>
@@ -70,10 +82,15 @@ export const usePersonsStore = create<State>()(
 
             const movimientos = [...p.movimientos, movimiento];
 
+            const base =
+              p.saldoInicial !== undefined
+                ? p.saldoInicial
+                : p.saldo - sumMovimientos(p.movimientos);
+
             return {
               ...p,
               movimientos,
-              saldo: calcularSaldo(movimientos),
+              saldo: calcularSaldo(movimientos, base),
             };
           }),
         })),
@@ -83,6 +100,11 @@ export const usePersonsStore = create<State>()(
           personas: state.personas.map((p) => {
             if (p.id !== personaId) return p;
 
+            const base =
+              p.saldoInicial !== undefined
+                ? p.saldoInicial
+                : p.saldo - sumMovimientos(p.movimientos);
+
             const movimientos = p.movimientos.map((m) =>
               m.id === movimientoId ? { ...m, ...data } : m
             );
@@ -90,7 +112,7 @@ export const usePersonsStore = create<State>()(
             return {
               ...p,
               movimientos,
-              saldo: calcularSaldo(movimientos),
+              saldo: calcularSaldo(movimientos, base),
             };
           }),
         })),
@@ -100,6 +122,11 @@ export const usePersonsStore = create<State>()(
           personas: state.personas.map((p) => {
             if (p.id !== personaId) return p;
 
+            const base =
+              p.saldoInicial !== undefined
+                ? p.saldoInicial
+                : p.saldo - sumMovimientos(p.movimientos);
+
             const movimientos = p.movimientos.filter(
               (m) => m.id !== movimientoId
             );
@@ -107,7 +134,7 @@ export const usePersonsStore = create<State>()(
             return {
               ...p,
               movimientos,
-              saldo: calcularSaldo(movimientos),
+              saldo: calcularSaldo(movimientos, base),
             };
           }),
         })),
