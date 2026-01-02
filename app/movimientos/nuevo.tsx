@@ -1,7 +1,7 @@
 import { usePersonsStore } from "@/src/store/usePersonsStore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Crypto from "expo-crypto";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 
@@ -12,11 +12,12 @@ export default function NuevoMovimiento() {
   const [tipo, setTipo] = useState<"ingreso" | "retiro">("ingreso");
   const [monto, setMonto] = useState("");
   const [descripcion, setDescripcion] = useState("");
-
   const [fecha, setFecha] = useState<Date>(new Date());
   const [mostrarPicker, setMostrarPicker] = useState(false);
 
   const guardar = () => {
+    if (!monto) return;
+
     addMovimiento(personaId!, {
       id: Crypto.randomUUID(),
       tipo,
@@ -24,120 +25,199 @@ export default function NuevoMovimiento() {
       descripcion,
       fecha: fecha.toISOString(),
     });
+
     router.back();
   };
 
+  const colorTipo = tipo === "ingreso" ? "#3aff7a" : "#ff4d4d";
+
   return (
-    <View style={{ padding: 16 }}>
-      <Text style={{ fontSize: 22, marginBottom: 16, color: "#fff" }}>
-        Nuevo movimiento
-      </Text>
+    <>
+      <Stack.Screen
+        options={{
+          title: "Nuevo movimiento",
+          headerStyle: { backgroundColor: "#000" },
+          headerTitleStyle: { color: "#fff" },
+          headerShadowVisible: false,
+        }}
+      />
 
-      {/* Tipo */}
-      <View style={{ flexDirection: "row", marginBottom: 16 }}>
-        <Pressable
-          onPress={() => setTipo("ingreso")}
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#000",
+          padding: 16,
+        }}
+      >
+        {/* Selector de tipo */}
+        <View
           style={{
-            flex: 1,
-            padding: 12,
-            backgroundColor: tipo === "ingreso" ? "#ffffffff" : "#212121ff",
+            flexDirection: "row",
+            backgroundColor: "#0A0A0A",
+            borderRadius: 16,
+            marginBottom: 20,
+            borderWidth: 1,
+            borderColor: `${colorTipo}55`,
           }}
         >
-          <Text
+          <Pressable
+            onPress={() => setTipo("ingreso")}
             style={{
-              color: tipo === "ingreso" ? "#000000ff" : "#ffffffff",
-              textAlign: "center",
+              flex: 1,
+              paddingVertical: 14,
+              borderRadius: 16,
+              backgroundColor: tipo === "ingreso" ? "#111" : "transparent",
             }}
           >
-            Ingreso
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 16,
+                fontWeight: "600",
+                color: tipo === "ingreso" ? "#3aff7a" : "#666",
+              }}
+            >
+              Ingreso
+            </Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => setTipo("retiro")}
+            style={{
+              flex: 1,
+              paddingVertical: 14,
+              borderRadius: 16,
+              backgroundColor: tipo === "retiro" ? "#111" : "transparent",
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 16,
+                fontWeight: "600",
+                color: tipo === "retiro" ? "#ff4d4d" : "#666",
+              }}
+            >
+              Retiro
+            </Text>
+          </Pressable>
+        </View>
+
+        {/* Card del formulario */}
+        <View
+          style={{
+            backgroundColor: "#0A0A0A",
+            borderRadius: 16,
+            padding: 16,
+            borderWidth: 1,
+            borderColor: "#222",
+          }}
+        >
+          {/* Monto */}
+          <Text
+            style={{
+              color: "#aaa",
+              fontSize: 14,
+              marginBottom: 6,
+            }}
+          >
+            Monto
           </Text>
-        </Pressable>
+          <TextInput
+            placeholder="0.00"
+            placeholderTextColor="#444"
+            keyboardType="numeric"
+            value={monto}
+            onChangeText={setMonto}
+            style={{
+              fontSize: 24,
+              color: "#fff",
+              fontWeight: "600",
+              paddingVertical: 8,
+              marginBottom: 16,
+            }}
+          />
 
+          {/* Descripción */}
+          <Text
+            style={{
+              color: "#aaa",
+              fontSize: 14,
+              marginBottom: 6,
+            }}
+          >
+            Descripción
+          </Text>
+          <TextInput
+            placeholder="Opcional"
+            placeholderTextColor="#444"
+            value={descripcion}
+            onChangeText={setDescripcion}
+            style={{
+              color: "#fff",
+              fontSize: 16,
+              paddingVertical: 8,
+              marginBottom: 16,
+            }}
+          />
+
+          {/* Fecha */}
+          <Pressable
+            onPress={() => setMostrarPicker(true)}
+            style={{
+              paddingVertical: 12,
+              borderTopWidth: 1,
+              borderColor: "#222",
+            }}
+          >
+            <Text style={{ color: "#aaa", fontSize: 14 }}>Fecha</Text>
+            <Text
+              style={{
+                color: "#fff",
+                fontSize: 16,
+                marginTop: 4,
+              }}
+            >
+              {fecha.toLocaleDateString()}
+            </Text>
+          </Pressable>
+        </View>
+
+        {mostrarPicker && (
+          <DateTimePicker
+            value={fecha}
+            mode="date"
+            display="default"
+            onChange={(_, selectedDate) => {
+              setMostrarPicker(false);
+              if (selectedDate) setFecha(selectedDate);
+            }}
+          />
+        )}
+
+        {/* Botón guardar */}
         <Pressable
-          onPress={() => setTipo("retiro")}
-          style={{
-            flex: 1,
-            padding: 12,
-            backgroundColor: tipo === "retiro" ? "#ffffffff" : "#212121ff",
-          }}
+          onPress={guardar}
+          style={({ pressed }) => ({
+            marginTop: 24,
+            paddingVertical: 16,
+            borderRadius: 16,
+            backgroundColor: colorTipo,
+            opacity: pressed ? 0.85 : 1,
+          })}
         >
           <Text
             style={{
-              color: tipo === "retiro" ? "#000000ff" : "#ffffffff",
+              color: "#000",
+              fontSize: 16,
+              fontWeight: "700",
               textAlign: "center",
             }}
           >
-            Retiro
+            Guardar movimiento
           </Text>
         </Pressable>
       </View>
-
-      {/* Monto */}
-      <TextInput
-        placeholder="Monto"
-        keyboardType="numeric"
-        value={monto}
-        onChangeText={setMonto}
-        style={{
-          borderWidth: 1,
-          padding: 12,
-          borderColor: "#ffffffff",
-          marginBottom: 12,
-          color: "#ffffffff",
-        }}
-      />
-
-      {/* Descripción */}
-      <TextInput
-        placeholder="Descripción"
-        value={descripcion}
-        onChangeText={setDescripcion}
-        style={{
-          borderWidth: 1,
-          padding: 12,
-          marginBottom: 12,
-          color: "#fff",
-          borderColor: "#fff",
-        }}
-      />
-
-      {/* Fecha */}
-      <Pressable
-        onPress={() => setMostrarPicker(true)}
-        style={{
-          padding: 12,
-          borderWidth: 1,
-          marginBottom: 16,
-          borderColor: "#fff",
-        }}
-      >
-        <Text style={{ color: "#fff" }}>
-          Fecha: {fecha.toLocaleDateString()}
-        </Text>
-      </Pressable>
-
-      {mostrarPicker && (
-        <DateTimePicker
-          value={fecha}
-          mode="date"
-          display="default"
-          onChange={(_, selectedDate) => {
-            setMostrarPicker(false);
-            if (selectedDate) {
-              setFecha(selectedDate);
-            }
-          }}
-        />
-      )}
-
-      <Pressable
-        onPress={guardar}
-        style={{ padding: 16, backgroundColor: "#ffffffff" }}
-      >
-        <Text style={{ color: "#000000ff", textAlign: "center" }}>
-          Guardar movimiento
-        </Text>
-      </Pressable>
-    </View>
+    </>
   );
 }

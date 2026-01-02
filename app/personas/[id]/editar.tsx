@@ -15,7 +15,18 @@ export default function EditarPersona() {
   const [color, setColor] = useState(persona?.color ?? "");
 
   if (!persona) {
-    return <Text>Persona no encontrada</Text>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#000",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text style={{ color: "#666" }}>Persona no encontrada</Text>
+      </View>
+    );
   }
 
   const guardar = () => {
@@ -23,14 +34,13 @@ export default function EditarPersona() {
       nombre,
       color,
     });
-
     router.back();
   };
 
   const confirmarEliminar = () => {
     Alert.alert(
       "Eliminar persona",
-      "Se eliminarán todos los movimientos asociados. ¿Deseas continuar?",
+      "Se eliminarán todos los movimientos asociados. Esta acción no se puede deshacer.",
       [
         { text: "Cancelar", style: "cancel" },
         {
@@ -47,38 +57,88 @@ export default function EditarPersona() {
 
   return (
     <>
-      <Stack.Screen options={{ title: "Editar persona" }} />
+      <Stack.Screen
+        options={{
+          title: "Editar persona",
+          headerStyle: { backgroundColor: "#000" },
+          headerTitleStyle: { color: "#fff" },
+          headerShadowVisible: false,
+        }}
+      />
 
-      <View style={{ padding: 16 }}>
-        <Text style={{ fontSize: 22, marginBottom: 16, color: "#fff" }}>
-          Editar persona
-        </Text>
-
-        <TextInput
-          value={nombre}
-          onChangeText={setNombre}
-          placeholder="Nombre"
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#000",
+          padding: 16,
+        }}
+      >
+        {/* Card principal */}
+        <View
           style={{
+            backgroundColor: "#0A0A0A",
+            borderRadius: 16,
+            padding: 16,
             borderWidth: 1,
-            padding: 12,
-            marginBottom: 12,
-            borderColor: "#ffffffff",
-            color: "#ffffffff",
+            borderColor: "#222",
           }}
-        />
+        >
+          {/* Nombre */}
+          <Text
+            style={{
+              color: "#aaa",
+              fontSize: 14,
+              marginBottom: 6,
+            }}
+          >
+            Nombre
+          </Text>
+          <TextInput
+            value={nombre}
+            onChangeText={setNombre}
+            placeholder="Nombre"
+            placeholderTextColor="#444"
+            style={{
+              color: "#fff",
+              fontSize: 18,
+              fontWeight: "500",
+              paddingVertical: 8,
+              marginBottom: 20,
+            }}
+          />
 
-        <ColorPickerField value={color} onChange={setColor} />
+          {/* Color */}
+          <Text
+            style={{
+              color: "#aaa",
+              fontSize: 14,
+              marginBottom: 8,
+            }}
+          >
+            Color identificador
+          </Text>
+          <ColorPickerField value={color} onChange={setColor} />
+        </View>
 
         {/* Guardar */}
         <Pressable
           onPress={guardar}
-          style={{
-            padding: 16,
-            backgroundColor: color,
+          style={({ pressed }) => ({
             marginTop: 320,
-          }}
+            paddingVertical: 16,
+            borderRadius: 16,
+            backgroundColor: color || "#3aff7a",
+            opacity: pressed ? 0.85 : 1,
+          })}
         >
-          <Text style={{ color: "#000000ff", textAlign: "center" }}>
+          <Text
+            style={{
+              color: "#000",
+              fontSize: 16,
+              fontWeight: "700",
+              textAlign: "center",
+            }}
+          >
             Guardar cambios
           </Text>
         </Pressable>
@@ -86,15 +146,21 @@ export default function EditarPersona() {
         {/* Eliminar */}
         <Pressable
           onPress={confirmarEliminar}
-          style={{
-            padding: 16,
-            backgroundColor: "#df2440ff",
+          style={({ pressed }) => ({
             marginTop: 12,
-          }}
+            paddingVertical: 16,
+            borderRadius: 16,
+            backgroundColor: "#200",
+            borderWidth: 1,
+            borderColor: "#ff4d4d",
+            opacity: pressed ? 0.85 : 1,
+          })}
         >
           <Text
             style={{
-              color: "#fff",
+              color: "#ff4d4d",
+              fontSize: 16,
+              fontWeight: "600",
               textAlign: "center",
             }}
           >
