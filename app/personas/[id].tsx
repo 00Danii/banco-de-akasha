@@ -24,9 +24,25 @@ export default function PersonaDetalle() {
     );
   }
 
-  const movimientosOrdenados = [...persona.movimientos].sort(
+  const movimientos = persona.movimientos ?? [];
+
+  const movimientosOrdenados = [...movimientos].sort(
     (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
   );
+
+  const ingresos = movimientos.reduce(
+    (acc, m) => (m.tipo === "ingreso" ? acc + m.monto : acc),
+    0
+  );
+
+  const retiros = movimientos.reduce(
+    (acc, m) => (m.tipo === "retiro" ? acc + m.monto : acc),
+    0
+  );
+
+  const saldoInicial = persona.saldoInicial ?? 0;
+
+  const format = (n: number) => `$${n.toFixed(2)}`;
 
   return (
     <>
@@ -38,17 +54,17 @@ export default function PersonaDetalle() {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <View
                 style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: 4,
+                  width: 10,
+                  height: 10,
+                  borderRadius: 6,
                   backgroundColor: persona.color,
-                  marginRight: 8,
+                  marginRight: 10,
                 }}
               />
               <Text
                 style={{
                   fontSize: 18,
-                  fontWeight: "600",
+                  fontWeight: "700",
                   color: "#fff",
                   marginRight: 8,
                 }}
@@ -58,6 +74,7 @@ export default function PersonaDetalle() {
 
               <Pressable
                 onPress={() => router.push(`/personas/${persona.id}/editar`)}
+                style={{ marginLeft: 6 }}
               >
                 <MaterialCommunityIcons
                   name="pencil-outline"
@@ -75,7 +92,7 @@ export default function PersonaDetalle() {
                   params: { personaId: persona.id },
                 })
               }
-              style={{ padding: 4 }}
+              style={{ padding: 6 }}
             >
               <MaterialCommunityIcons name="transfer" size={26} color="#fff" />
             </Pressable>
@@ -93,33 +110,98 @@ export default function PersonaDetalle() {
         {/* Card de resumen */}
         <View
           style={{
-            padding: 16,
-            borderRadius: 16,
+            padding: 18,
+            borderRadius: 18,
             backgroundColor: "#0A0A0A",
             borderWidth: 1,
             borderColor: `${persona.color}55`,
-            marginBottom: 20,
+            marginBottom: 18,
+            shadowColor: "#000",
+            shadowOpacity: 0.4,
+            shadowRadius: 8,
+            elevation: 4,
           }}
         >
-          <Text
-            style={{
-              color: "#aaa",
-              fontSize: 14,
-              marginBottom: 4,
-            }}
-          >
-            Saldo actual
-          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 32,
+                backgroundColor: "#070707",
+                borderWidth: 2,
+                borderColor: persona.color,
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: 12,
+              }}
+            >
+              <Text style={{ color: "#fff", fontWeight: "700" }}>
+                {persona.nombre.slice(0, 2).toUpperCase()}
+              </Text>
+            </View>
 
-          <Text
-            style={{
-              color: "#fff",
-              fontSize: 28,
-              fontWeight: "600",
-            }}
-          >
-            ${persona.saldo}
-          </Text>
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "#aaa", fontSize: 13 }}>Saldo actual</Text>
+              <Text
+                style={{
+                  color: "#fff",
+                  fontSize: 32,
+                  fontWeight: "800",
+                  marginTop: 2,
+                }}
+              >
+                {format(persona.saldo)}
+              </Text>
+
+              <Text style={{ color: "#666", fontSize: 12, marginTop: 6 }}>
+                Inicial {format(saldoInicial)} • {movimientos.length}{" "}
+                movimientos
+              </Text>
+            </View>
+          </View>
+
+          <View style={{ flexDirection: "row", marginTop: 14, gap: 10 }}>
+            <View
+              style={{
+                flex: 1,
+                paddingVertical: 10,
+                paddingHorizontal: 12,
+                borderRadius: 12,
+                backgroundColor: "#060606",
+                borderWidth: 1,
+                borderColor: "#1a1a1a",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "#aaa", fontSize: 12 }}>Ingresos</Text>
+              <Text
+                style={{ color: "#3aff7a", fontWeight: "700", marginTop: 6 }}
+              >
+                {format(ingresos)}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                paddingVertical: 10,
+                paddingHorizontal: 12,
+                borderRadius: 12,
+                backgroundColor: "#060606",
+                borderWidth: 1,
+                borderColor: "#1a1a1a",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "#aaa", fontSize: 12 }}>Retiros</Text>
+              <Text
+                style={{ color: "#ff6b6b", fontWeight: "700", marginTop: 6 }}
+              >
+                {format(retiros)}
+              </Text>
+            </View>
+          </View>
         </View>
 
         {/* Lista de movimientos */}
@@ -166,25 +248,21 @@ export default function PersonaDetalle() {
                 style={({ pressed }) => ({
                   padding: 14,
                   borderRadius: 14,
-                  backgroundColor: "#0A0A0A",
+                  backgroundColor: "#090909",
                   marginBottom: 12,
                   opacity: pressed ? 0.85 : 1,
+                  borderWidth: 1,
+                  borderColor: "#151515",
                 })}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  {/* Indicador */}
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <View
                     style={{
-                      width: 10,
-                      height: 10,
-                      borderRadius: 5,
-                      backgroundColor: esIngreso ? "#3aff7a" : "#ff4d4d",
-                      marginRight: 12,
+                      width: 12,
+                      height: 12,
+                      borderRadius: 6,
+                      backgroundColor: esIngreso ? "#3aff7a" : "#ff6b6b",
+                      marginRight: 14,
                     }}
                   />
 
@@ -193,31 +271,30 @@ export default function PersonaDetalle() {
                       style={{
                         color: "#fff",
                         fontSize: 16,
-                        fontWeight: "500",
-                        marginBottom: 2,
+                        fontWeight: "700",
                       }}
                     >
-                      {esIngreso ? "+" : "-"}${item.monto}
+                      {item.descripcion || (esIngreso ? "Ingreso" : "Retiro")}
                     </Text>
 
                     <Text
-                      style={{
-                        color: "#aaa",
-                        fontSize: 14,
-                      }}
+                      style={{ color: "#777", fontSize: 13, marginTop: 4 }}
                       numberOfLines={1}
                     >
-                      {item.descripcion}
+                      {new Date(item.fecha).toLocaleDateString()}
                     </Text>
                   </View>
 
                   <Text
                     style={{
-                      color: "#555",
-                      fontSize: 12,
+                      color: esIngreso ? "#3aff7a" : "#ff6b6b",
+                      fontSize: 16,
+                      fontWeight: "800",
+                      marginLeft: 12,
                     }}
                   >
-                    {new Date(item.fecha).toLocaleDateString()}
+                    {esIngreso ? "+" : "-"}
+                    {format(item.monto)}
                   </Text>
                 </View>
               </Pressable>
