@@ -68,16 +68,6 @@ export default function Home() {
             </View>
           }
           renderItem={({ item }) => {
-            const saldoInicial = item.saldoInicial ?? item.saldo ?? 0;
-            const delta = item.saldo - saldoInicial;
-            const positive = delta >= 0;
-            const progress =
-              saldoInicial === 0
-                ? item.saldo > 0
-                  ? 1
-                  : 0
-                : Math.min(Math.max(item.saldo / (saldoInicial || 1), 0), 2); // relative
-
             // último movimiento (si existe)
             const lastMovimiento = (item.movimientos ?? [])
               .slice()
